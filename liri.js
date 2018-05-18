@@ -1,3 +1,4 @@
+//Required NPM Files
 require("dotenv").config();
 var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
@@ -21,7 +22,7 @@ for (var i = 3; i < nodeArgs.length; i++) {
     }
 }
 
-console.log("Input: " + stringValue);
+//console.log("Input: " + stringValue);
 
 //similar to bank, need to pass in command to swtich to right function
 switch (nodeActivity) {
@@ -108,3 +109,11 @@ function omdb(movie) {
         }
     });
 };
+
+//File Read to Spotify
+function randomFile() {
+    fs.readFile('random.txt', "utf8", function (error, data) {
+        var textFile = data.split(',');
+        spotify(textFile[1]);
+    });
+}
