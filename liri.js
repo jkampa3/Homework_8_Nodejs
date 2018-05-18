@@ -1,13 +1,11 @@
 require("dotenv").config();
 var request = require("request");
-var spotify = require("node-spotify-api");
-var twitter = require("twitter");
+var Spotify = require("node-spotify-api");
+var Twitter = require("twitter");
 var fs = require("fs");
 
 //get key variable
 var keys = require('./keys.js');
-var spotifykey = new spotify(keys.spotify);
-var client = new twitter(keys.twitter);
 
 //get input command
 var nodeActivity = process.argv[2];
@@ -28,15 +26,20 @@ console.log(stringValue);
 //similar to bank, need to pass in command to swtich to right function
 switch (nodeActivity) {
     case "my-tweets":
-        if (stringValue) {
-            twitter(stringValue);
-        } else {
-            twitter("Metallica");
-        }
+        twitter();
+        //if (stringValue) {
+        //    twitter(stringValue);
+        //} else {
+        //    twitter("Metallica");
+        //};
         break;
 
     case "spotify-this-song":
-        spotify();
+        if (stringValue) {
+            spotify(stringValue);
+        } else {
+            spotify("The Sign");
+        };
         break;
 
     case "movie-this":
@@ -54,8 +57,9 @@ switch (nodeActivity) {
 
 //Twitter
 //Twiter API had Count tied to it
-function twitter(stringValue) {
-    var params = {screen_name: stringValue, count: 20};
+function twitter() {
+    var client = new Twitter(keys.twitter);
+    var params = { screen_name: 'Metallica', count: 20 };
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error) {
             console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
@@ -70,10 +74,20 @@ function twitter(stringValue) {
     });
 };
 
+//Spotify
+function spotify(song) {
+    var spotify = new Spotify(keys.spotify);
+    spotify.search({ type: 'track', query: song, limit: 1 }, function (err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+        console.log(data);
+    });
+};
 
 //OMDB
-function omdb(stringValue) {
-    var queryUrl = "http://www.omdbapi.com/?t=" + stringValue + "&y=&plot=short&&tomatoes=true&r=json&apikey=trilogy";
+function omdb(movie) {
+    var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&&tomatoes=true&r=json&apikey=trilogy";
     request(queryUrl, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             var parseJSON = JSON.parse(body);
