@@ -1,7 +1,7 @@
 require("dotenv").config();
-var request = require("request");
-var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
+var Spotify = require("node-spotify-api");
+var request = require("request");
 var fs = require("fs");
 
 //get key variable
@@ -21,7 +21,7 @@ for (var i = 3; i < nodeArgs.length; i++) {
     }
 }
 
-console.log(stringValue);
+console.log("Input: " + stringValue);
 
 //similar to bank, need to pass in command to swtich to right function
 switch (nodeActivity) {
@@ -38,7 +38,7 @@ switch (nodeActivity) {
         if (stringValue) {
             spotify(stringValue);
         } else {
-            spotify("The Sign");
+            spotify("Ace of Base");
         };
         break;
 
@@ -62,7 +62,7 @@ function twitter() {
     var params = { screen_name: 'Metallica', count: 20 };
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error) {
-            console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
+            console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
             console.log("Most Recent Tweets");
 
             for (var i = 0; i < tweets.length; i++) {
@@ -70,6 +70,7 @@ function twitter() {
                 console.log("Tweet From: " + tweets[i].created_at);
                 console.log(tweets[i].text);
             }
+            console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
         }
     });
 };
@@ -81,7 +82,10 @@ function spotify(song) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-        console.log(data);
+        console.log("Artist(s) Name: " + data.tracks.items[0].artists[0].name);
+        console.log("Song Title: " + data.tracks.items[0].name);
+        console.log("Preview URL: " + data.tracks.items[0].preview_url);
+        console.log("Album Name: " + data.tracks.items[0].album.name);
     });
 };
 
@@ -91,16 +95,16 @@ function omdb(movie) {
     request(queryUrl, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             var parseJSON = JSON.parse(body);
-            console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
+            console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
             console.log("Movie Title: " + parseJSON.Title);
             console.log("Year of Release: " + parseJSON.Year);
             console.log("IMDB Rating: " + parseJSON.Ratings[0].Value);
-            console.log("Rotton Tomato Rating: " + parseJSON.Ratings[1].Value);
+            console.log("Rotten Tomato Rating: " + parseJSON.Ratings[1].Value);
             console.log("Country of Production: " + parseJSON.Country);
             console.log("Movie Language: " + parseJSON.Language);
             console.log("Actor(s) or Actress(es): " + parseJSON.Actors);
             console.log("Movie Plot: " + parseJSON.Plot);
-            console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
+            console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
         }
     });
 };
