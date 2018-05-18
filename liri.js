@@ -5,8 +5,9 @@ var twitter = require("twitter");
 var fs = require("fs");
 
 //get key variable
-//var spotify = new Spotify(keys.spotify);
-//var client = new Twitter(keys.twitter);
+var keys = require('./keys.js');
+var spotifykey = new spotify(keys.spotify);
+var client = new twitter(keys.twitter);
 
 //get input command
 var nodeActivity = process.argv[2];
@@ -25,10 +26,13 @@ for (var i = 3; i < nodeArgs.length; i++) {
 console.log(stringValue);
 
 //similar to bank, need to pass in command to swtich to right function
-
 switch (nodeActivity) {
     case "my-tweets":
-        twitter();
+        if (stringValue) {
+            twitter(stringValue);
+        } else {
+            twitter("Metallica");
+        }
         break;
 
     case "spotify-this-song":
@@ -36,11 +40,11 @@ switch (nodeActivity) {
         break;
 
     case "movie-this":
-    if(stringValue) {
-        omdb(stringValue);
-    }else{
-        omdb("Mr Nobody")
-    }
+        if (stringValue) {
+            omdb(stringValue);
+        } else {
+            omdb("Mr Nobody");
+        };
         break;
 
     case "do-what-it-says":
@@ -48,12 +52,31 @@ switch (nodeActivity) {
         break;
 }
 
+//Twitter
+//Twiter API had Count tied to it
+function twitter(stringValue) {
+    var params = {screen_name: stringValue, count: 20};
+    client.get('statuses/user_timeline', params, function (error, tweets, response) {
+        if (!error) {
+            console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
+            console.log("Most Recent Tweets");
+
+            for (var i = 0; i < tweets.length; i++) {
+                console.log("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+                console.log("Tweet From: " + tweets[i].created_at);
+                console.log(tweets[i].text);
+            }
+        }
+    });
+};
+
+
 //OMDB
 function omdb(stringValue) {
     var queryUrl = "http://www.omdbapi.com/?t=" + stringValue + "&y=&plot=short&&tomatoes=true&r=json&apikey=trilogy";
-    request(queryUrl, function(error, response, body) {
+    request(queryUrl, function (error, response, body) {
         if (!error && response.statusCode === 200) {
-            var parseJSON=JSON.parse(body);
+            var parseJSON = JSON.parse(body);
             console.log("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
             console.log("Movie Title: " + parseJSON.Title);
             console.log("Year of Release: " + parseJSON.Year);
