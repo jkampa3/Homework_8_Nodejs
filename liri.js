@@ -20,7 +20,7 @@ for (var i = 3; i < nodeArgs.length; i++) {
     } else {
         stringValue = stringValue + nodeArgs[i];
     }
-}
+};
 
 //console.log("Input: " + stringValue);
 
@@ -54,7 +54,7 @@ switch (nodeActivity) {
     case "do-what-it-says":
         randomFile();
         break;
-}
+};
 
 //Twitter
 //Twiter API had Count tied to it
@@ -116,4 +116,4 @@ function randomFile() {
         var textFile = data.split(',');
         spotify(textFile[1]);
     });
-}
+};
